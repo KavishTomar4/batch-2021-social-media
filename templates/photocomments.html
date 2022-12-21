@@ -1,0 +1,344 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = 'stylesheet' href="../static/photocomments_style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@500&family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <title>Comments | Batch 2021</title>
+</head>
+<body>
+
+    <div class="container" id = "nav-container">
+        <nav>
+            <h2>__Batch 2021__</h2>
+            <ul style="list-style: none;">
+                <li id = "first-li"><a style = "color:white;" href = "/home/A">SECTION A</a></li>
+                <li id = "second-li"><a style = "color:white;" href = "/home/B">SECTION B</a></li>
+                <li id = "last-li"><a style = "color:white;" href = "/home/C">SECTION C</a></li>
+               
+            </ul>
+            <div id = "user-btns">
+              <h4 id = "upload-container"><a href="/upload" id = "btnUpload">Upload</a></h4>
+              <h4 id = "user-profile"><a style="color:white;" href = "/profile">{{username}}</a></h4>
+            </div>
+
+           
+           
+        </nav>
+    </div>
+
+    <div id = "photo-comments-container">
+       <span><h3><span id = "photouser" style = "width: 944px;"><img id = "usersdp" width = "35" height = "35" style = "margin-right:1.3em;  object-fit: contain;" src = "{{userimage}}">{{photouser}}</span></h3>
+        {% if candelete == True %}
+            <form id = "candelete" method = "POST" action = "/deletephoto">
+                {% csrf_token %}
+                <input style = "display: none;" type = "text" name = "photoid" value = "{{photoid}}">
+                <input type = "submit" value = "Delete">
+            </form>
+        {% endif %}
+
+        </span>
+        <img id = "thisphoto" src = "{{photourl}}"  width = "932.3" height = "550">
+        <div id = "do-comment">
+            <div id = "show-suggestion"></div>
+            <form id = "commentform" action = "/makecomments" method = "POST">
+              {% csrf_token %}
+              <input name="comment" type = "text" id = "input-comment" placeholder = "Write comment">
+              <input type = "submit" id = "comment-submit" value = "Comment">
+            </form>
+          </div>
+    </div>
+    <div id="comments-container">
+        <!--{% for comment in commentdb %} 
+            <div id="comment-component">
+                <p id = "commentId">{{comment.comment_id}}</p>
+                <h3><span style = "width: 944px;"><img id = "usersdp" width = "40" height = "40" style = "margin-right:1.3em;  object-fit: contain;" src = "{{comment.commenting_user_url}}">{{comment.commenting_user}}</span></h3>
+                <h5 style = "padding-bottom: 1em; padding-left:2em;" id = "thiscomment">{{comment.comment}}</h5>
+                <button id = "replyBtn">Reply</button>
+                <div id = "do-reply" style = "display:none;">
+                    <form id = "replyform" action = "/makereply" method = "POST">
+                        {% csrf_token %}
+                        <input name="reply" type = "text" id = "input-reply" placeholder = "Write a Reply">
+                        <input type = "submit" id = "reply-submit" value = "Reply">
+                      </form>
+                </div>
+                <div id = "reply-container">
+
+                </div>
+            </div> 
+        {% endfor %} -->
+    </div>
+   
+   
+
+   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$('document').ready(function(){
+
+    //$('#do-reply').css('display', 'none')
+
+    //$('#show-suggestion').css('display', 'none')
+    let getUser = false;
+    $('#input-comment').keyup(function(e){
+        
+        
+        
+       
+        
+       
+        if(e.keyCode == 20 || e.keyCode == 16){
+            return
+        }
+
+        let i = e.target.value.length - 1;
+
+        if(e.target.value.charAt(i) == "@"){
+            getUser = true;
+        }
+        
+        if(e.target.value.charAt(i) == " "){
+            getUser = false;
+        }
+
+        if(getUser){
+            $('#show-suggestion').css('display', 'block')
+            let data = $('#input-comment').val().slice( $('#input-comment').val().lastIndexOf('@')+1)
+            $.ajax({
+                url: '/makesuggestions',
+                method: 'POST',
+                data: {
+                    search: data,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    
+                },
+                success: function(result){
+                    $('#show-suggestion').empty();
+                    for(let e = 0; e < result.data.length; e++ ){
+                        
+                       $('#show-suggestion').append('<p id = "clickable-suggestion" style = "cursor:pointer;">'+result.data[e].username+'</p>')
+                  }
+                }
+               })
+            
+        }
+        if(!getUser || $('#show-suggestion').html() == ""){
+            $('#show-suggestion').css('display', 'none')
+        }
+
+        
+        
+    });
+
+    
+
+    $(document).on('click','#clickable-suggestion',function(){
+        
+       
+        let text = $('#input-comment').val()
+        let replaced_element = $('#clickable-suggestion').text()
+        modified_text = text.replace(text.slice(text.lastIndexOf("@")+1), replaced_element)
+        $('#input-comment').val(modified_text)
+        $('#show-suggestion').css('display', 'none')
+        
+        
+    })
+
+    
+
+    
+
+
+
+    
+    $.ajax({
+        url: '/makecomments',
+        method: 'GET',
+        data : {
+            commenting_user: $('#user-profile').text(),
+            commenting_photo_url: $('#thisphoto').attr('src'),
+            comment: $('#input-comment').val(),
+        },
+        success: function(result){
+            $("#comments-container").empty();
+            let i;
+            for(i = result.commenting_user.length-1 ; i>=0; i--){
+                    let commentcomponent = `<div id='comment-component'>
+                        <h3><span style = 'width: 944px;'><img id = 'usersdp' width = '55' height = '55' style = 'margin-right:1.3em;  object-fit: contain;' src = '${result.commenting_user[i].commenting_user_url}'>${result.commenting_user[i].commenting_user}</span></h3>
+                        <h5 style = "margin-left : 2em;">${result.commenting_user[i].comment}</h5>
+                        <h5 style = "color: #8c8b8b; margin-left : 2em; margin-bottom: 2em; ">${result.commenting_user[i].date}</h5>
+                        <div id = "do-reply" style = "display:none;">
+                            <form id = "replyform" action = "/makereply" method = "POST">
+                                {% csrf_token %}
+                                <input name="reply" type = "text" id = "input-reply" placeholder = "Write a Reply">
+                                <input type = "submit" id = "reply-submit" value = "Reply">
+                              </form>
+                        </div>
+                        <div id = "reply-container">
+        
+                        </div>
+                    </div>`
+                    $('#comments-container').append(commentcomponent);
+            }
+
+            }
+
+        });
+    
+        
+        
+    
+   
+    let com;
+    let commentinguser;
+    let usersdp;
+    let photodp;
+    let photouser;
+    $('#comment-submit').click(function(e){
+        e.preventDefault();
+         com = $('#input-comment').val();
+         commentinguser = $('#user-profile').text();
+         photodp = $('#thisphoto').attr('src')
+         photouser = $('#photouser').text()
+        $.ajax({
+            url: '/makecomments',
+            method: 'POST',
+            data: {
+                photouser : photouser,
+                commenting_user: commentinguser,
+                commenting_photo_url: photodp,
+                comment: com,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(result){
+                $("#comments-container").empty();
+                let i;
+                for(i = 0; i< result.commenting_user.length; i++){
+                    let commentcomponent = `<div id='comment-component'>
+                        <h3><span style = 'width: 944px;'><img id = 'usersdp' width = '55' height = '55' style = 'margin-right:1.3em;  object-fit: contain;' src = '${result.commenting_user[i].commenting_user_url}'>${result.commenting_user[i].commenting_user}</span></h3>
+                        <h5 id = "comment-text" style = "margin-left : 2em; ">${result.commenting_user[i].comment}</h5>
+                        <h5 id = "date-text" style = "color: #8c8b8b; margin-left : 2em; margin-bottom: 2em;" >${result.commenting_user[i].date}</h5>
+                        <div id = "do-reply" style = "display:none;">
+                            <form id = "replyform" action = "/makereply" method = "POST">
+                                {% csrf_token %}
+                                <input name="reply" type = "text" id = "input-reply" placeholder = "Write a Reply">
+                                <input type = "submit" id = "reply-submit" value = "Reply">
+                              </form>
+                        </div>
+                        <div id = "reply-container">
+        
+                        </div>
+                    </div>`
+
+                    $('#comments-container').append(commentcomponent);
+
+                    /*let commentSplit = $('#comment-text').text().split(' ')
+                    let newText = "";
+                    for(let e = 0 ; e < commentSplit.length; e++){
+                        if(commentSplit[e].startsWith('@')){
+                            
+                            let thatName = commentSplit[e].slice(1, commentSplit[e].length )
+                            let t = commentSplit[e].link(`http://localhost:8000/profile/${thatName}`)
+                            commentSplit[e] = t
+                        }
+                        newText += commentSplit[e]+ " "
+
+                    }
+                    console.log(commentSplit)
+                    $('#comment-text').text(newText)*/
+                   
+
+                    
+
+                }
+
+            }
+
+        })
+    });
+
+    
+    
+    $('#reply-submit').click(function(e){
+        e.preventDefault()
+        let id = ""
+        id = $('#commentId').html()
+        console.log(id)
+        $.ajax({
+        url: '/makereply',
+        method: 'POST',
+        data: {
+         
+           commentId: id,
+           replying_user: $('#user-profile').text(),
+           replying_user_reply: $('#input-reply').val(),
+           csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(result){
+            sReplies = result.all_replies.split('},')
+            let jsonData;
+            for(let i = 0 ; i < sReplies.length-1 ; i++){
+                jsonData = JSON.parse(sReplies[i])
+                //console.log(jsonData.replyingUser, jsonData.replyingUserReply)
+               $('#reply-container').append(`<div id='reply-component'><span><h4>${jsonData.replyingUser}</h4><p>${jsonData.replyingUserReply}</p></span></div>`)
+            }
+        }
+    })
+})
+
+
+$(document).on('click','#replyBtn',function(){
+        
+    $('#do-reply').css('display', 'block')
+   
+})
+
+$(document).on('click','#deletBtn',function(){
+        
+   let pp = $('#comment-text').text()
+
+   $.ajax({
+    url: '/deletecomment',
+    method: 'POST',
+    data: {
+        comment : pp,
+        commenting_photo_url: $('#thisphoto').attr('src'),
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    },
+    success: function(result){
+        $("#comments-container").empty();
+                let i;
+                for(i = result.commenting_user.length-1 ; i >= 0; i--){
+                    let commentcomponent = `<div id='comment-component'>
+                        <h3><span style = 'width: 944px;'><img id = 'usersdp' width = '55' height = '55' style = 'margin-right:1.3em;  object-fit: contain;' src = '${result.commenting_user[i].commenting_user_url}'>${result.commenting_user[i].commenting_user}</span></h3>
+                        <h5 id = "comment-text">${result.commenting_user[i].comment}</h5>
+                        
+                        <div id = "do-reply" style = "display:none;">
+                            <form id = "replyform" action = "/makereply" method = "POST">
+                                {% csrf_token %}
+                                <input name="reply" type = "text" id = "input-reply" placeholder = "Write a Reply">
+                                <input type = "submit" id = "reply-submit" value = "Reply">
+                              </form>
+                        </div>
+                        <div id = "reply-container">
+        
+                        </div>
+                    </div>`
+
+                    $('#comments-container').append(commentcomponent);
+         }
+      }
+   })
+
+   
+})
+
+
+    
+
+});
+</script>
+</body>
+</html>

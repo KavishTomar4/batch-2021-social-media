@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = 'stylesheet' href="../static/login_style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@500&family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <title>Login | Batch 2021</title>
+</head>
+<body>
+
+    <div class="container" id = "nav-container">
+        <nav id = "nav">
+            <h2>__Batch 2021__</h2>
+            <ul style="list-style: none;">
+                <li><a style = "color:white;" href = "/credits">CREDITS</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class= "container" id = "form-slogan-container">
+      <div class= "container" id = "slogan-container">
+         <h2>A platform for memories of batch 2021 of SMCIC</h2>
+         <h4>This platform is dedicated to the students of the batch 2021 <br/>
+             where the former students can share their old memories of the school</h4>
+      </div>
+      <div class= "container" id = "form-container">
+        <h4>{{err}}</h4>
+         <form class= "container" id="login-container" action = '/' method = 'POST'>
+            {% csrf_token %}
+           <input style="color:white" type="text" name="username" id="username" placeholder="Username">
+           <input style="color:white" type="password" name="password" id="password" placeholder="Password">
+           <input type="submit" id="login-btn" value="Login">
+         </form>
+         <h4> or <a href="/signup">Sign up</a></h4>
+      </div>
+   </div>
+
+
+
+   
+    
+</body>
+</html>

@@ -1,0 +1,72 @@
+body{
+    background: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    margin: 0 ;
+}
+
+#nav-container{
+    color:white;
+    text-align: left;
+    height : 9vh;
+    font-family: 'Noto Sans Mono', monospace;
+    background: #141414;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+#nav-container nav h2{
+    margin-left: 2em;
+    
+}
+#nav-container nav{
+    display: flex;
+    flex-direction: row;
+    
+}
+#nav-container nav ul{
+    margin-left: 3em;
+    padding-top: 0.5em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#nav-container nav ul li{
+    margin-right: 1.5em;
+    cursor: pointer;
+}
+#slogan-container{
+    margin-right: 10em;
+}
+#form-slogan-container{
+    display: flex;
+    flex-direction: row;
+    margin: 15em 15em;
+}
+#login-container{
+    display:flex;
+    flex-direction: column;
+    
+}
+input[type="text"]{
+    border:  2px solid #141414 ;
+    width: 250%;
+    margin-bottom: 1.5em;
+    height: 4vh;
+    border-radius: 0.5em;
+}
+input[type="password"]{
+    border:  2px solid #141414 ;
+    width: 250%;
+    margin-bottom: 1.5em;
+    height: 4vh;
+    border-radius: 0.5em;
+
+}
+input[type="submit"]{
+    color:white;
+    height: 4vh;
+    width: 10vw;
+    background: #141414;
+    border: #141414;
+    border-radius: 0.5em;
+   
+}
+

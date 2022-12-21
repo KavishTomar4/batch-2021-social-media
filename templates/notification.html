@@ -1,0 +1,46 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = 'stylesheet' href="../static/notification_style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@500&family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <title>Notification | Batch 2021</title>
+</head>
+<body>
+
+    <div class="container" id = "nav-container">
+        <nav>
+            <h2>__Batch 2021__</h2>
+            <ul style="list-style: none;">
+                <li id = "first-li"><a style = "color:white;" href = "/home/A">SECTION A</a></li>
+                <li id = "second-li"><a style = "color:white;" href = "/home/B">SECTION B</a></li>
+                <li id = "last-li"><a style = "color:white;" href = "/home/C">SECTION C</a></li>
+               
+            </ul>
+            <div id = "user-btns">
+              <h4 id = "upload-container"><a href="/upload" id = "btnUpload">Upload</a></h4>
+              <h4 id = "user-profile"><a style="color:white;" href = "/profile">{{username}}</a></h4>
+            </div>
+
+        </nav>
+    </div>
+
+    <div id = "notification-container">
+        <div id = "notification-header">
+            <h1> Notification </h2>
+            {% for n in notifications %}
+                <div id = "notification-component">
+                    <h4><span>{% autoescape off %} {{n.notification}} {% endautoescape %} <img style = "margin-left:3em; border: 2px solid black;" width = "50" height = "50" src = "{{n.notification_img_src}}"></span></h4>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+
+    
+</body>
+</html>

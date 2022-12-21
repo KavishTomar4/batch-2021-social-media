@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = 'stylesheet' href="../static/profile_style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@500&family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <title>Profile | Batch 2021</title>
+</head>
+<body>
+
+    <div class="container" id = "nav-container">
+        <nav>
+            <h2>__Batch 2021__</h2>
+            <ul style="list-style: none;">
+                <li id = "first-li"><a style = "color:white;" href = "/home/A">SECTION A</a></li>
+                <li id = "second-li"><a style = "color:white;" href = "/home/B">SECTION B</a></li>
+                <li id = "last-li"><a style = "color:white;" href = "/home/C">SECTION C</a></li>
+               
+            </ul>
+            <div id = "user-btns">
+              <h4 id = "home-btn"><a style="color:white;" href = "/home/{{section}}">Home</a></h4>
+            </div>
+
+           
+           
+        </nav>
+    </div>
+
+   <div id="user-profile">
+     <div id="name-container">
+       <img style="margin:0;" width = "150" height = "150" src="{{profileimg}}">
+       <h1 id="f-l-name">{{fname}} {{lname}}</h1>
+       <h3 style="color:grey;" id="username">{{username}}</h3>
+    </div>
+   </div>
+  <hr/>
+   <div id = "feed-container">
+   {% for photos in this_user_uploads %}
+   <div id = "photo">
+    <form action = "/comments" method = "POST">
+      {% csrf_token %}
+      <input name = "photoid" type = "text" class = "url-link"  value = "{{photos.photo_id}}" readonly>
+      <input name = "userimage" type = "text" class = "url-link"  value = "{{photos.user_img_url}}" readonly>
+      <input name = "photouser" type = "text" class = "url-link"  value = "{{photos.user_name}}" readonly>
+      <input name = "photourl" type = "text" class = "url-link" value = "{{photos.photo.url}}" readonly>
+      <button  type = "submit" ><img width = "450" height="450" style = "object-fit: contain;" src = "{{photos.photo.url}}"></button>
+         
+   </form>
+   </div>
+    {% endfor %}
+   </div>
+</body>
+</html>

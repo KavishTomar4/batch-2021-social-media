@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = 'stylesheet' href="../static/upload_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" integrity="sha512-0SPWAwpC/17yYyZ/4HSllgaK7/gg9OlVozq8K7rf3J8LvCjYEEIfzzpnA2/SSjpGIunCSD18r3UhvDcu/xncWA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@500&family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <title>Upload | Batch 2021</title>
+</head>
+<body>
+
+    <div class="container" id = "nav-container">
+        <nav>
+            <h2>__Batch 2021__</h2>
+            <ul style="list-style: none;">
+                <li>CREDITS</li>
+                <li>FOLLOW ON</li>
+            </ul>
+        </nav>
+    </div>
+    <div id = "display-image-container">
+        <img src = "" id = "display-image" />
+        <button id = "btnCrop">Crop</button>
+    </div>
+    <form action="/upload" method="POST" id = "upload-photo-form">
+        {% csrf_token %}
+        <input type = "file" id = "file-uploader" name = "btnFile" />
+        <input type="text" placeholder="Photo Url" name = "url" id = "url-text" readonly required />
+        <div id = "show-suggestion"></div>
+        <input type = "text" placeholder = "Write Caption" name = "caption" id = "caption">
+        <input type="submit" value="Upload" id = "btnSubmit"/>
+    </form>
+
+    
+
+    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src = "../static/uploadscript.js"></script>   
+</body>
+</html>

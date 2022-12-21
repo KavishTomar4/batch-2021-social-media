@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = 'stylesheet' href="../static/home_style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@500&family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <title>Home | Batch 2021</title>
+</head>
+<body>
+
+    <div class="container" id = "nav-container">
+        <nav>
+            <h2>__Batch 2021__</h2>
+            <ul style="list-style: none;">
+                <li id = "first-li"><a style = "color:white;" href = "/home/A">SECTION A</a></li>
+                <li id = "second-li"><a style = "color:white;" href = "/home/B">SECTION B</a></li>
+                <li id = "last-li"><a style = "color:white;" href = "/home/C">SECTION C</a></li>
+               
+            </ul>
+            <div id = "user-btns">
+              <h4 style = "margin-right: 2em;" id = "notification-container"><a href="/notification" id = "btnUpload"><img  width = "30" height = "30" src = "https://www.citypng.com/public/uploads/preview/white-notification-bell-icon-transparent-background-11638985030nycenfyruw.png" />{{notification_numbers}}</a></h4>
+              <h4 id = "upload-container"><a href="/upload" id = "btnUpload">Upload</a></h4>
+              <h4 id = "user-profile"><a style="color:white;" href = "/profile">{{username}}</a></h4>
+            </div>
+
+           
+           
+        </nav>
+    </div>
+
+    <div id = "members-container">
+        <h4 style = "text-align:center; margin-top:2em;">Members : Section {{section}}</h4>
+        <div id = "members-display">
+            {% for ids in usersSection %}
+                {% if ids.username == username %}
+                <div style = "display:flex; flex-direction:column; align-items:center; margin-left:1em; margin-right: 1em;">
+                    <a style = "text-align:center;" href = "/profile">
+                    <img width = "100" height = "100" src = "{{ids.img_src.url}}">
+                    <h4>You</h4>
+                    </a>
+                </div>
+                {% endif %}
+               {% if ids.username != username %}
+                    <div style = "display:flex; flex-direction:column; align-items:center; margin-left:1em; margin-right: 1em;">
+                        <a style = "text-align:center;" href = "/profile/{{ids.username}}">
+                        <img width = "100" height = "100" src = "{{ids.img_src.url}}">
+                        <h4>{{ids.username}}</h4>
+                        </a>
+                    </div>
+                {% endif %}
+           {% endfor %}
+        </div>
+    </div>
+
+    <div id = "home-feeds">
+        {% for photos in tableObjects %}
+           <div id = "photo-component">
+             <h3><span style = "width: 944px;"><img width = "35" height = "35" style = "margin-right:1.3em;" src = "{{photos.user_img_url}}">{{photos.user_name}}</span></h3>
+             <img width = "932.3" height = "550" src = "{{photos.photo.url}}" >
+             <h4 style = "padding-left:1em;" id = "photo-caption"> {% autoescape off %} {{photos.caption}} {% endautoescape %}</h4>
+             <form action = "/comments" method = "POST">
+                {% csrf_token %}
+                <input name = "photoid" type = "text" class = "url-link"  value = "{{photos.photo_id}}" readonly>
+                <input name = "userimage" type = "text" class = "url-link"  value = "{{photos.user_img_url}}" readonly>
+                <input name = "photouser" type = "text" class = "url-link"  value = "{{photos.user_name}}" readonly>
+                <input name = "photourl" type = "text" class = "url-link" value = "{{photos.photo.url}}" readonly>
+                <input style = " color:white; height: 4vh; width: 10vw; background: #141414; border: #141414;border-radius: 0.5em; margin-bottom: 2em; margin-left: 1em;" id = "comment-button" type = "submit" value = "Comment">   
+             </form>
+           </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
